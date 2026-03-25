@@ -5,6 +5,57 @@ A Gradle-based Spring Boot application that integrates with the **OpenWeatherMap
 - **Base URL:** `http://localhost:8081`
 - **External API:** [OpenWeatherMap](https://openweathermap.org/api)
 - **Port:** `8081`
+- **Swagger UI:** `http://localhost:8081/swagger-ui/index.html`
+- **OpenAPI JSON:** `http://localhost:8081/api-docs`
+
+---
+
+## Swagger UI
+
+This project ships with **springdoc-openapi** (`v1.7.0`), which auto-generates interactive API documentation from the source annotations.
+
+### Access URLs (once the app is running)
+
+| Resource | URL |
+|---|---|
+| Swagger UI (interactive) | http://localhost:8081/swagger-ui/index.html |
+| OpenAPI JSON spec | http://localhost:8081/api-docs |
+| OpenAPI YAML spec | http://localhost:8081/api-docs.yaml |
+
+### Swagger UI Walkthrough
+
+```mermaid
+flowchart LR
+    A([Open Browser]) --> B["http://localhost:8081/swagger-ui/index.html"]
+    B --> C{Swagger UI}
+    C --> D["📂 Weather API tag\n6 endpoints listed"]
+    D --> E["Click any endpoint\nto expand it"]
+    E --> F["Click 'Try it out'"]
+    F --> G["Fill in parameters\nor request body"]
+    G --> H["Click 'Execute'"]
+    H --> I["View live response\n(status code + JSON body)"]
+```
+
+### Swagger Configuration (application.properties)
+
+```properties
+springdoc.api-docs.path=/api-docs
+springdoc.swagger-ui.path=/swagger-ui.html
+springdoc.swagger-ui.operationsSorter=method
+springdoc.swagger-ui.tagsSorter=alpha
+springdoc.swagger-ui.try-it-out-enabled=true
+```
+
+### What Each Annotation Does
+
+| Annotation | Purpose | Example |
+|---|---|---|
+| `@Tag` | Groups all endpoints under a named section in Swagger UI | `@Tag(name = "Weather API")` |
+| `@Operation` | Sets the endpoint summary + description shown in the UI | `@Operation(summary = "Fetch weather by city")` |
+| `@ApiResponses` | Documents all possible HTTP response codes and their body shapes | `@ApiResponses({@ApiResponse(responseCode="200", ...)})` |
+| `@Parameter` | Describes path/query parameters with type, example, and whether required | `@Parameter(description="City name", example="London")` |
+| `@RequestBody` (OAS) | Documents the JSON body schema and provides a pre-filled example | `@RequestBody(content=@Content(examples=...))` |
+| `@ExampleObject` | Injects a realistic JSON snippet into the Swagger UI example panel | `@ExampleObject(value="{\"city\":\"London\",...}")` |
 
 ---
 
